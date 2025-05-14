@@ -1,12 +1,15 @@
 [tool.poetry]
-name = "python-experiments-bootstrap"
+name = "PSFL"
 version = "0.1.0"
 description = ""
 authors = ["Davide Domini <davide.domini@unibo.it>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.13"
+phyelds = "^1.6.0"
+torch = "^2.7.0"
+torchvision = "^0.22.0"
 
 
 [build-system]
