@@ -792,14 +792,14 @@ files = [
 
 [[package]]
 name = "phyelds"
-version = "2.0.0"
+version = "2.2.1"
 description = "A lightweight Python library to support aggregate computing!"
 optional = false
 python-versions = "<4.0,>=3.13"
 groups = ["main"]
 files = [
-    {file = "phyelds-2.0.0-py3-none-any.whl", hash = "sha256:b0c31d0e425ac4613f66d9dfe11f423da0b8352cc384cec587386b6d4c54a7a7"},
-    {file = "phyelds-2.0.0.tar.gz", hash = "sha256:3e742417667170ed43e97a5f7d456923df11c6a3fd9e541e27c8d7294311b566"},
+    {file = "phyelds-2.2.1-py3-none-any.whl", hash = "sha256:185a1f7cca01ed42feca69cc277c4c873df487d2b70ba2b9fa40f39cc1cd8440"},
+    {file = "phyelds-2.2.1.tar.gz", hash = "sha256:8c993ddf272fce128d8e90ad4a655c529c4489e509a1456199131f3e1db89005"},
 ]
 
 [package.dependencies]
@@ -1221,4 +1221,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "1bb5f6bd9769e1a775acf97516ea5d2ec66f226e251243da948284e6ef778ba7"
+content-hash = "314adcc87d62658eeaf8f05321fbac805e5f7393e5911f127d3214955be7c6c2"
