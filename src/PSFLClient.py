@@ -23,7 +23,7 @@ def psfl_client(initial_model_weights, threshold):
     log(train_loss, validation_loss, validation_accuracy) # Metrics logging
 
     distances = loss_based_distances(evolved_model) # TODO - to weights, not model itself
-    leader = elect_leaders(threshold, distances) # If leader is true then I'm an aggregator
+    leader = elect_leaders(threshold, distances) # If leader is true, then I'm an aggregator
     potential = distance_to(leader, distances)
 
     models = collect_with(potential, set(evolved_model), lambda x, y: x.union(y))
