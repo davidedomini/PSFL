@@ -19,7 +19,7 @@ def run_simulation(threshold, sparsity_level):
     simulator.environment.set_neighborhood_function(radius_neighborhood(1.15))
     deformed_lattice(simulator, 10, 10, 1, 0.01)
 
-    initial_model_weights = MLP().state_dict()
+    initial_model_params = MLP().state_dict()
 
     # schedule the main function
     for node in simulator.environment.nodes.values():
@@ -30,7 +30,7 @@ def run_simulation(threshold, sparsity_level):
             0.1,
             node,
             psfl_client,
-            initial_model_weights=initial_model_weights,
+            initial_model_params=initial_model_params,
             threshold=threshold,
             sparsity_level=sparsity_level)
 
