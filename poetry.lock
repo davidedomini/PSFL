@@ -1079,6 +1079,23 @@ pyyaml = ">=5.1"
 virtualenv = ">=20.10.0"
 
 [[package]]
+name = "profed"
+version = "0.4.2"
+description = "A benchmark for proximity-based non-IID Federated Learning"
+optional = false
+python-versions = "<4.0,>=3.12"
+groups = ["main"]
+files = [
+    {file = "profed-0.4.2-py3-none-any.whl", hash = "sha256:fbb249076be1495c9574afe818710253330cca9d3059a644bc2cbc9854e5268a"},
+    {file = "profed-0.4.2.tar.gz", hash = "sha256:bb1c93a68354301828a5087e4ead937bcf274a352e2215245388b5c925dd4a17"},
+]
+
+[package.dependencies]
+numpy = ">=2.2.2,<3.0.0"
+torch = ">=2.7.0,<3.0.0"
+torchvision = ">=0.22.0,<0.23.0"
+
+[[package]]
 name = "pyparsing"
 version = "3.2.3"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -1502,4 +1519,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "7c9b9ce755ba036bebb75e2bb17e1b643e6a4c17fa4532316d0e2d811e24f09f"
+content-hash = "62c3ae385601b8aa0b79e5cacf46739cb92952c5cd218c2195eaf711d546187e"
