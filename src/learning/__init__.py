@@ -1,7 +1,7 @@
 import copy
 import torch
 from torch import nn
-from model import MLP
+from learning.model import MLP
 from torch.utils.data import DataLoader
 
 
