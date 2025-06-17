@@ -1,6 +1,6 @@
 import numpy as np
 
-def divide_nodes_spatially(n_nodes, n_groups):
+def distribute_nodes_spatially(n_nodes, n_groups):
     rows = int(np.sqrt(n_nodes))
     cols = (n_nodes + rows - 1) // rows
 
