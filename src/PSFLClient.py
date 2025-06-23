@@ -14,36 +14,39 @@ impulsesEvery = 5
 @aggregate
 def psfl_client(initial_model_params, data, threshold, sparsity_level):
 
-    data = remember((initial_model_params, 0)) # Stores local model and current global round
-    local_model_weights, tick = data.value
+    training_data, validation_data = data
+    stored_model = remember((initial_model_params, 0)) # Stores local model and current global round
+    local_model_weights, tick = stored_model.value
     local_model = load_from_weights(local_model_weights)
 
     # Local training
-    evolved_model, train_loss = local_training(local_model, 2, data, 128)
-    validation_loss, validation_accuracy = model_evaluation(evolved_model, data, 128)
+    evolved_model, train_loss = local_training(local_model, 2, training_data, 128)
+    validation_accuracy, validation_loss = model_evaluation(evolved_model, validation_data, 128)
 
     log(train_loss, validation_loss, validation_accuracy) # Metrics logging
 
-    distances = loss_based_distances(evolved_model.state_dict())
+    distances = loss_based_distances(evolved_model, validation_data)
     leader = elect_leaders(threshold, distances) # If leader is true, then I'm an aggregator
     store('is_aggregator', leader)
     potential = distance_to(leader, distances)
 
-    models = collect_with(potential, set(evolved_model.state_dict()), lambda x, y: x.union(y))
+    models = collect_with(potential, [evolved_model], lambda x, y: x + y)
     aggregated_model = average_weights(models, [1.0 for _ in models])
     area_model = broadcast(leader, aggregated_model, distances)
 
     if tick % impulsesEvery == 0:
-        average_weights({evolved_model, area_model}, [0.1, 0.9])
+        average_weights([evolved_model, area_model], [0.1, 0.9])
 
-    data.update((evolved_model, tick + 1))
+    stored_model.update((evolved_model, tick + 1))
+
+    return potential
 
 
 @aggregate
-def loss_based_distances(model_weights):
+def loss_based_distances(model_weights, validation_data):
     models_weights = neighbors(model_weights)
     neighbors_models = Field(models_weights.exclude_self(), local_id())
-    evaluations = neighbors_models.map(model_evaluation)
+    evaluations = neighbors_models.map(lambda m: model_evaluation(m, validation_data, 128)[1])
     neighbors_evaluations = neighbors(evaluations.data)
     loss_field = compute_loss_metric(evaluations, neighbors_evaluations.data)
     return loss_field
