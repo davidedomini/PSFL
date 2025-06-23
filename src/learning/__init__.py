@@ -2,6 +2,7 @@ import copy
 import torch
 from torch import nn
 from learning.model import MLP
+import torch.nn.utils.prune as tprune
 from torch.utils.data import DataLoader
 
 
@@ -57,3 +58,15 @@ def average_weights(models_params, weights):
             w_avg[key] += models_params[i][key] * weights[i]
         w_avg[key] = torch.div(w_avg[key], sum_weights)
     return w_avg
+
+def post_prune_model(model, amount):
+    # Pruning
+    for _, module in model.named_modules():
+        if isinstance(module, nn.Linear):
+            tprune.l1_unstructured(module, name='weight', amount=amount)
+
+    #Remove the pruning reparametrizations to make the model explicitly sparse
+    for _, module in model.named_modules():
+        if isinstance(module, nn.Linear):
+            tprune.remove(module, 'weight')
+    return model
