@@ -68,19 +68,17 @@ def run_simulation(threshold, sparsity_level, number_subregions, seed):
         # )
     # render
     simulator.schedule_event(0.95, render_sync, simulator, "result")
-    config = ExporterConfig('data/', 'federations', [], [], 3)
+    config = ExporterConfig('data/', f'federations_seed-{seed}_regions-{number_subregions}_sparsity-{sparsity_level}', [], [], 3)
     simulator.schedule_event(0.96, federations_count_csv_exporter, simulator, 1.0, config)
-    config = ExporterConfig('data/', 'experiment', ['TrainLoss', 'ValidationLoss', 'ValidationAccuracy'], ['mean', 'std', 'min', 'max'], 3)
+    config = ExporterConfig('data/', f'experiment_seed-{seed}_regions-{number_subregions}_sparsity-{sparsity_level}', ['TrainLoss', 'ValidationLoss', 'ValidationAccuracy'], ['mean', 'std', 'min', 'max'], 3)
     simulator.schedule_event(1.0, csv_exporter, simulator, 1.0, config)
     simulator.run(100)
 
-
-#TODO - update hyperparams
 # Hyper-parameters configuration
 thresholds = [20.0]
-sparsity_levels = [0.0]
-areas = [5]
-seeds = [42]
+sparsity_levels = [0.0, 0.3, 0.5, 0.7, 0.9]
+areas = [3, 5, 9]
+seeds = list(range(10))
 
 for seed in seeds:
     random.seed(seed)
