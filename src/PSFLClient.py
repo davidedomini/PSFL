@@ -5,7 +5,7 @@ from phyelds.libraries.device import local_id, store
 from phyelds.calculus import aggregate, neighbors, remember
 from phyelds.libraries.leader_election import elect_leaders
 from phyelds.libraries.spreading import distance_to, broadcast
-from learning import local_training, model_evaluation, average_weights
+from learning import local_training, model_evaluation, average_weights, post_prune_model
 
 
 impulsesEvery = 5
@@ -23,6 +23,7 @@ def psfl_client(initial_model_params, data, threshold, sparsity_level):
     evolved_model, train_loss = local_training(local_model, 2, training_data, 128)
     validation_accuracy, validation_loss = model_evaluation(evolved_model, validation_data, 128)
 
+    pruned_model = post_prune_model(evolved_model, sparsity_level)
     log(train_loss, validation_loss, validation_accuracy) # Metrics logging
 
     distances = loss_based_distances(evolved_model, validation_data)
