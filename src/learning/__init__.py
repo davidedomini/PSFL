@@ -59,7 +59,9 @@ def average_weights(models_params, weights):
         w_avg[key] = torch.div(w_avg[key], sum_weights)
     return w_avg
 
-def post_prune_model(model, amount):
+def post_prune_model(model_params, amount):
+    model = MLP()
+    model.load_state_dict(model_params)
     # Pruning
     for _, module in model.named_modules():
         if isinstance(module, nn.Linear):
@@ -69,4 +71,4 @@ def post_prune_model(model, amount):
     for _, module in model.named_modules():
         if isinstance(module, nn.Linear):
             tprune.remove(module, 'weight')
-    return model
+    return model.state_dict()
