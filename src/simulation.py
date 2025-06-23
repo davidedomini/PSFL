@@ -67,7 +67,7 @@ def run_simulation(threshold, sparsity_level, number_subregions, seed):
         #         data=mapping[node.id]
         # )
     # render
-    simulator.schedule_event(0.95, render_sync, simulator, "result")
+    # simulator.schedule_event(0.95, render_sync, simulator, "result")
     config = ExporterConfig('data/', f'federations_seed-{seed}_regions-{number_subregions}_sparsity-{sparsity_level}', [], [], 3)
     simulator.schedule_event(0.96, federations_count_csv_exporter, simulator, 1.0, config)
     config = ExporterConfig('data/', f'experiment_seed-{seed}_regions-{number_subregions}_sparsity-{sparsity_level}', ['TrainLoss', 'ValidationLoss', 'ValidationAccuracy'], ['mean', 'std', 'min', 'max'], 3)
