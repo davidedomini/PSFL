@@ -1,4 +1,7 @@
 import random
+import pandas as pd
+from pathlib import Path
+from datetime import datetime
 from learning.model import MLP
 from PSFLClient import psfl_client
 from dummy_client import dummy_client
@@ -80,9 +83,28 @@ sparsity_levels = [0.0, 0.3, 0.5, 0.7, 0.9]
 areas = [3, 5, 9]
 seeds = list(range(10))
 
+experiment_log_dir = 'finished-experiments/'
+
+data_dir = Path(experiment_log_dir)
+data_dir.mkdir(parents=True, exist_ok=True)
+
+csv_file = f'{experiment_log_dir}experiment_log.csv'
+
+df = pd.DataFrame(columns=['timestamp', 'experiment'])
+
+try:
+    df = pd.read_csv(csv_file)
+except FileNotFoundError:
+    pass
+
 for seed in seeds:
     random.seed(seed)
     for a in areas:
         for threshold in thresholds:
             for sparsity_level in sparsity_levels:
                 run_simulation(threshold, sparsity_level, a, seed)
+                experiment_name = f'seed-{seed}_regions-{a}_sparsity-{sparsity_level}_threshold-{threshold}'
+                timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                new_line = {'timestamp': timestamp, 'experiment': experiment_name}
+                df = pd.concat([df, pd.DataFrame([new_line])], ignore_index=True)
+                df.to_csv(csv_file, index=False)
