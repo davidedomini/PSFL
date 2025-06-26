@@ -1,11 +1,11 @@
-FROM python:3.12
+FROM python:3.13
 RUN mkdir -p /experiment
 VOLUME "davide.domini-volume"
 ENV DATA_DIR=/data
 WORKDIR /experiment
 COPY requirements.txt /experiment
 RUN python3 -m pip install -r requirements.txt
-COPY src /experiment
+COPY . /experiment
 ENV OWNER=1000:1000
 CMD export OUTPUT_DIR=$DATA_DIR/$(date +%Y-%m-%d-%H-%M-%S)-$(hostname) && \
     mkdir -p $OUTPUT_DIR && \
