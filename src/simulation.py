@@ -10,7 +10,7 @@ from utils import distribute_nodes_spatially
 from phyelds.simulator.render import render_sync
 from phyelds.simulator.deployments import deformed_lattice
 from phyelds.simulator.runner import aggregate_program_runner
-from src.custom_exporter import federations_count_csv_exporter
+from custom_exporter import federations_count_csv_exporter
 from phyelds.simulator.neighborhood import radius_neighborhood
 from phyelds.simulator.exporter import csv_exporter, ExporterConfig
 from ProFed.partitioner import Environment, Region, download_dataset, split_train_validation, partition_to_subregions
