@@ -12,9 +12,9 @@ impulsesEvery = 5
 MAX_TIME = 80
 
 @aggregate
-def psfl_client(initial_model_params, data, threshold, sparsity_level, regions, seed):
+def psfl_client(initial_model_params, data, threshold, regions, seed):
 
-    hyperparams = f'seed-{seed}_regions-{regions}_sparsity-{sparsity_level}'
+    hyperparams = f'seed-{seed}_regions-{regions}_threshold-{threshold}'
     training_data, validation_data, test_data = data
     stored_model = remember((initial_model_params, 0)) # Stores local model and current global round
     local_model_weights, tick = stored_model.value
@@ -29,10 +29,10 @@ def psfl_client(initial_model_params, data, threshold, sparsity_level, regions, 
     evolved_model, train_loss = local_training(local_model, 2, training_data, 128)
     validation_accuracy, validation_loss = model_evaluation(evolved_model, validation_data, 128)
 
-    pruned_model = post_prune_model(evolved_model, sparsity_level)
+    #pruned_model = post_prune_model(evolved_model, sparsity_level)
     log(train_loss, validation_loss, validation_accuracy) # Metrics logging
 
-    distances = loss_based_distances(pruned_model, validation_data)
+    distances = loss_based_distances(evolved_model, validation_data)
     leader = elect_leaders(threshold, distances) # If leader is true, then I'm an aggregator
     store('is_aggregator', leader)
     potential = distance_to(leader, distances)

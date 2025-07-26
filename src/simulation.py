@@ -30,7 +30,7 @@ def get_hyperparameters():
     experiment_name, hyperparams = list(hyperparams.items())[0]
     return experiment_name.lower(), hyperparams
 
-def run_simulation(threshold, sparsity_level, number_subregions, seed):
+def run_simulation(threshold, number_subregions, seed):
 
     simulator = Simulator()
 
@@ -46,7 +46,7 @@ def run_simulation(threshold, sparsity_level, number_subregions, seed):
     print(f'Number of devices: {devices}')
     print(mapping_devices_area)
 
-    train_data, test_data = download_dataset('EMNIST')
+    train_data, test_data = download_dataset('CIFAR100')
 
     train_data, validation_data = split_train_validation(train_data, 0.8)
     print(f'Number of training samples: {len(train_data)}')
@@ -77,7 +77,6 @@ def run_simulation(threshold, sparsity_level, number_subregions, seed):
             data=mapping[node.id],
             initial_model_params=initial_model_params,
             threshold=threshold,
-            sparsity_level=sparsity_level,
             regions=number_subregions,
             seed = seed)
         # simulator.schedule_event(
@@ -91,28 +90,27 @@ def run_simulation(threshold, sparsity_level, number_subregions, seed):
         # )
     # render
     # simulator.schedule_event(0.95, render_sync, simulator, "result")
-    config = ExporterConfig('data/', f'federations_seed-{seed}_regions-{number_subregions}_sparsity-{sparsity_level}', [], [], 3)
+    config = ExporterConfig('data/', f'federations_seed-{seed}_regions-{number_subregions}_threshold-{threshold}', [], [], 3)
     simulator.schedule_event(0.96, federations_count_csv_exporter, simulator, 1.0, config)
-    config = ExporterConfig('data/', f'experiment_seed-{seed}_regions-{number_subregions}_sparsity-{sparsity_level}', ['TrainLoss', 'ValidationLoss', 'ValidationAccuracy'], ['mean', 'std', 'min', 'max'], 3)
+    config = ExporterConfig('data/', f'experiment_seed-{seed}_regions-{number_subregions}_threshold-{threshold}', ['TrainLoss', 'ValidationLoss', 'ValidationAccuracy'], ['mean', 'std', 'min', 'max'], 3)
     simulator.schedule_event(1.0, csv_exporter, simulator, 1.0, config)
     simulator.add_monitor(TestSetEvalMonitor(simulator))
     simulator.run(80)
 
 # Hyper-parameters configuration
-thresholds = [20.0]
-sparsity_levels = [0.0, 0.3, 0.5, 0.7, 0.9]
+thresholds = [20.0, 40.0, 80.0]
 # areas = [3, 5, 9]
-seeds = list(range(10))
+seeds = list(range(20))
 
 experiment_name, hyperparams = get_hyperparameters()
 areas = hyperparams['areas']
 
-experiment_log_dir = 'finished-experiments/'
+experiment_log_dir = 'data/'
 
 data_dir = Path(experiment_log_dir)
 data_dir.mkdir(parents=True, exist_ok=True)
 
-csv_file = f'{experiment_log_dir}experiment_log.csv'
+csv_file = f'{experiment_log_dir}PSFL-finished-experiment_log.csv'
 
 df = pd.DataFrame(columns=['timestamp', 'experiment'])
 
@@ -125,11 +123,10 @@ for seed in seeds:
     random.seed(seed)
     for a in areas:
         for threshold in thresholds:
-            for sparsity_level in sparsity_levels:
-                print(f'Starting simulation with seed={seed}, regions={a}, sparsity={sparsity_level}, threshold={threshold}')
-                run_simulation(threshold, sparsity_level, a, seed)
-                experiment_name = f'seed-{seed}_regions-{a}_sparsity-{sparsity_level}_threshold-{threshold}'
-                timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                new_line = {'timestamp': timestamp, 'experiment': experiment_name}
-                df = pd.concat([df, pd.DataFrame([new_line])], ignore_index=True)
-                df.to_csv(csv_file, index=False)
+            print(f'Starting simulation with seed={seed}, regions={a}, threshold={threshold}')
+            run_simulation(threshold, a, seed)
+            experiment_name = f'seed-{seed}_regions-{a}_threshold-{threshold}'
+            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            new_line = {'timestamp': timestamp, 'experiment': experiment_name}
+            df = pd.concat([df, pd.DataFrame([new_line])], ignore_index=True)
+            df.to_csv(csv_file, index=False)
