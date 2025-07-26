@@ -1,4 +1,4 @@
-from learning.model import MLP
+from learning.model import MLP, init_mobilenet
 from phyelds.data import Field
 from phyelds.libraries.collect import collect_with
 from phyelds.libraries.device import local_id, store
@@ -83,6 +83,6 @@ def log(train_loss, validation_loss, validation_accuracy):
 
 
 def load_from_weights(weights):
-    model = MLP()
+    model = init_mobilenet()
     model.load_state_dict(weights)
     return model

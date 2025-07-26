@@ -5,11 +5,11 @@ import random
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
-from learning.model import MLP
 from PSFLClient import psfl_client
 from dummy_client import dummy_client
 from phyelds.simulator import Simulator
 from utils import distribute_nodes_spatially
+from learning.model import MLP, init_mobilenet
 from phyelds.simulator.render import render_sync
 from TestSetEvalMonitor import TestSetEvalMonitor
 from phyelds.simulator.deployments import deformed_lattice
@@ -38,7 +38,7 @@ def run_simulation(threshold, number_subregions, seed):
     simulator.environment.set_neighborhood_function(radius_neighborhood(1.15))
     deformed_lattice(simulator, 7, 7, 1, 0.01)
 
-    initial_model_params = MLP().state_dict()
+    initial_model_params = init_mobilenet().state_dict()
 
     devices = len(simulator.environment.nodes.values())
     mapping_devices_area = distribute_nodes_spatially(devices, number_subregions)
@@ -50,9 +50,9 @@ def run_simulation(threshold, number_subregions, seed):
 
     train_data, validation_data = split_train_validation(train_data, 0.8)
     print(f'Number of training samples: {len(train_data)}')
-    environment = partition_to_subregions(train_data, validation_data, 'Hard', number_subregions, seed)
+    environment = partition_to_subregions(train_data, validation_data, 'CIFAR100', 'Hard', number_subregions, seed)
     test_data, _ = split_train_validation(test_data, 1.0)
-    environment_test = partition_to_subregions(test_data, test_data, 'Hard', number_subregions, seed)
+    environment_test = partition_to_subregions(test_data, test_data, 'CIFAR100', 'Hard', number_subregions, seed)
 
     mapping = {}
 
@@ -95,7 +95,7 @@ def run_simulation(threshold, number_subregions, seed):
     config = ExporterConfig('data/', f'experiment_seed-{seed}_regions-{number_subregions}_threshold-{threshold}', ['TrainLoss', 'ValidationLoss', 'ValidationAccuracy'], ['mean', 'std', 'min', 'max'], 3)
     simulator.schedule_event(1.0, csv_exporter, simulator, 1.0, config)
     simulator.add_monitor(TestSetEvalMonitor(simulator))
-    simulator.run(80)
+    simulator.run(60)
 
 # Hyper-parameters configuration
 thresholds = [20.0, 40.0, 80.0]

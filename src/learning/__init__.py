@@ -1,7 +1,7 @@
 import copy
 import torch
 from torch import nn
-from learning.model import MLP
+from learning.model import MLP, init_mobilenet
 import torch.nn.utils.prune as tprune
 from torch.utils.data import DataLoader
 
@@ -28,7 +28,7 @@ def local_training(model, epochs, data, batch_size):
 
 
 def model_evaluation(model_params, data, batch_size):
-    model = MLP()
+    model = init_mobilenet()
     model.load_state_dict(model_params)
     criterion = nn.NLLLoss()
     model.eval()

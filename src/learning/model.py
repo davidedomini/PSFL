@@ -1,5 +1,6 @@
 from torch import nn
 import torch.nn.functional as F
+from torchvision.models import mobilenet_v2
 
 class MLP(nn.Module):
 
@@ -13,3 +14,12 @@ class MLP(nn.Module):
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return F.log_softmax(x, dim=1)
+
+def init_mobilenet():
+    model = mobilenet_v2(pretrained=True)
+    in_features = model.classifier[1].in_features
+    model.classifier = nn.Sequential(
+        nn.Dropout(p=0.2),
+        nn.Linear(in_features, 100)
+    )
+    return model
