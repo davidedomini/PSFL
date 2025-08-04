@@ -2,7 +2,7 @@ services:
 
   experiment-areas3:
     hostname: exp-areas3
-    image: davidedomini99/experiments-2025-iot-cifar-psfl:1.0.1
+    image: davidedomini99/experiments-2025-iot-cifar-psfl:1.0.2
     volumes:
       - davide.domini-volume:/experiment/data
     environment:
@@ -13,7 +13,7 @@ services:
 
   experiment-areas5:
     hostname: exp-areas5
-    image: davidedomini99/experiments-2025-iot-cifar-psfl:1.0.1
+    image: davidedomini99/experiments-2025-iot-cifar-psfl:1.0.2
     volumes:
       - davide.domini-volume:/experiment/data
     environment:
@@ -24,7 +24,7 @@ services:
 
   experiment-areas9:
     hostname: exp-areas9
-    image: davidedomini99/experiments-2025-iot-cifar-psfl:1.0.1
+    image: davidedomini99/experiments-2025-iot-cifar-psfl:1.0.2
     volumes:
       - davide.domini-volume:/experiment/data
     environment:
