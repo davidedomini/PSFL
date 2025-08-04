@@ -20,6 +20,7 @@ def init_mobilenet():
     in_features = model.classifier[1].in_features
     model.classifier = nn.Sequential(
         nn.Dropout(p=0.2),
-        nn.Linear(in_features, 100)
+        nn.Linear(in_features, 100),
+        nn.LogSoftmax(dim=1)
     )
     return model
