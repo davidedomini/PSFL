@@ -9,7 +9,7 @@ from learning import local_training, model_evaluation, average_weights, post_pru
 
 
 impulsesEvery = 5
-MAX_TIME = 80
+MAX_TIME = 60
 
 @aggregate
 def psfl_client(initial_model_params, data, threshold, regions, seed):
